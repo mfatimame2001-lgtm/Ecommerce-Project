@@ -64,6 +64,8 @@ This project can be deployed on any Python-ready hosting service. Two easy optio
    - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
 6. Deploy and open the generated URL.
 
+> Note: The deployed app will seed an admin user and sample demo data automatically on startup.
+
 ### Deploy on Railway
 1. Create a Railway account and connect GitHub.
 2. Choose the project repo and deploy.

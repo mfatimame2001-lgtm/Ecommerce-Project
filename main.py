@@ -5,8 +5,10 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 from database import get_db, engine
 import models, auth
+from seed import seed_demo_data
 
 models.Base.metadata.create_all(bind=engine)
+seed_demo_data()
 
 app = FastAPI(title="ShopEase E-Commerce")
 app.mount("/static", StaticFiles(directory="static"), name="static")
