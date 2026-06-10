@@ -30,7 +30,9 @@
               <tr>
                 <td>
                   {% if item.product.image_url %}
-                    <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="cart-img">
+                    <a href="{{ item.product.image_url }}" target="_blank" rel="noopener noreferrer">
+                      <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="cart-img">
+                    </a>
                   {% else %}
                     <div class="cart-img" style="background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:1.4rem">📦</div>
                   {% endif %}
