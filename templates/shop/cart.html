@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}My Cart · ShopEase{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1>🛒 My Cart</h1>
+    <a href="/" class="btn btn-outline">← Continue Shopping</a>
+  </div>
+
+  {% if cart_items %}
+  <div class="cart-layout">
+    <div>
+      <div class="card">
+        <div class="card-body" style="padding:0">
+          <table class="cart-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Subtotal</th>
+                <th>Update</th>
+                <th>Remove</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in cart_items %}
+              <tr>
+                <td>
+                  {% if item.product.image_url %}
+                    <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="cart-img">
+                  {% else %}
+                    <div class="cart-img" style="background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:1.4rem">📦</div>
+                  {% endif %}
+                </td>
+                <td>
+                  <strong>{{ item.product.name }}</strong><br>
+                  <small style="color:#888">{{ item.product.category.name if item.product.category else '' }}</small>
+                </td>
+                <td>₹{{ "%.2f"|format(item.product.price) }}</td>
+                <td>
+                  <form action="/cart/update/{{ item.id }}" method="post" style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;">
+                    <input name="quantity" type="number" min="1" max="{{ item.product.stock }}" value="{{ item.quantity }}" class="form-control" style="width:80px;">
+                </td>
+                <td><strong>₹{{ "%.2f"|format(item.product.price * item.quantity) }}</strong></td>
+                <td>
+                    <button class="btn btn-primary btn-sm" type="submit">Update</button>
+                  </form>
+                </td>
+                <td>
+                  <form action="/cart/remove/{{ item.id }}" method="post">
+                    <button class="btn btn-danger btn-sm" type="submit" data-confirm="Remove this item?">🗑</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-summary">
+      <h3>Order Summary</h3>
+      <div class="summary-row">
+        <span>Items ({{ cart_items|length }})</span>
+        <span>₹{{ "%.2f"|format(total) }}</span>
+      </div>
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span style="color:#2ecc71">FREE</span>
+      </div>
+      <div class="summary-row total">
+        <span>Total</span>
+        <span>₹{{ "%.2f"|format(total) }}</span>
+      </div>
+      <form action="/orders/place" method="post" style="margin-top:1.2rem">
+        <button class="btn btn-primary btn-block btn-lg" type="submit"
+          data-confirm="Place order for ₹{{ '%.2f'|format(total) }}?">
+          ✅ Place Order
+        </button>
+      </form>
+    </div>
+  </div>
+
+  {% else %}
+  <div class="empty-state">
+    <div class="emoji">🛒</div>
+    <h3>Your cart is empty</h3>
+    <p>Add some products to get started!</p>
+    <a href="/" class="btn btn-primary" style="margin-top:1rem">🛍 Shop Now</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

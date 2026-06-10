@@ -1,0 +1,37 @@
+{% extends "admin_base.html" %}
+{% block title %}Users · Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>👥 Registered Users</h1>
+  <span style="color:#888">{{ users|length }} total users</span>
+</div>
+
+<div class="table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr><th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Orders</th><th>Joined</th></tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u.id }}</td>
+        <td><strong>{{ u.name }}</strong></td>
+        <td>{{ u.email }}</td>
+        <td>
+          {% if u.is_admin %}
+            <span class="badge badge-processing">Admin</span>
+          {% else %}
+            <span class="badge" style="background:#f0f0f0;color:#555">Customer</span>
+          {% endif %}
+        </td>
+        <td>{{ u.orders|length }}</td>
+        <td>{{ u.created_at.strftime('%d %b %Y') }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" style="text-align:center;padding:2rem;color:#888">No users found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

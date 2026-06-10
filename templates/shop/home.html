@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}ShopEase · Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>Welcome to <span>ShopEase</span></h1>
+  <p>Discover amazing products at unbeatable prices.</p>
+  <div class="hero-btns">
+    {% if user %}
+      <a href="/cart" class="btn btn-primary btn-lg">🛒 My Cart</a>
+      <a href="/orders" class="btn btn-outline btn-lg" style="color:#fff;border-color:#fff">📦 My Orders</a>
+    {% else %}
+      <a href="/register" class="btn btn-primary btn-lg">Get Started →</a>
+      <a href="/login" class="btn btn-outline btn-lg" style="color:#fff;border-color:#fff">Sign In</a>
+    {% endif %}
+  </div>
+</section>
+
+<div class="container">
+  <!-- Category Filter -->
+  <div class="cat-pills">
+    <span class="cat-pill active" data-cat="all">🛍 All Products</span>
+    {% for cat in categories %}
+      <span class="cat-pill" data-cat="{{ cat.name }}">{{ cat.name }}</span>
+    {% endfor %}
+  </div>
+
+  <h2 class="section-title">Featured Products</h2>
+
+  {% if products %}
+  <div class="products-grid">
+    {% for product in products %}
+    <div class="product-card" data-cat="{{ product.category.name if product.category else '' }}">
+      <div class="product-img">
+        {% if product.image_url %}
+          <img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy">
+        {% else %}
+          <div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;">📦</div>
+        {% endif %}
+        {% if product.stock <= 5 and product.stock > 0 %}
+          <span class="product-badge">Only {{ product.stock }} left!</span>
+        {% elif product.stock == 0 %}
+          <span class="product-badge" style="background:#e74c3c">Out of Stock</span>
+        {% endif %}
+      </div>
+      <div class="product-info">
+        <div class="product-cat">{{ product.category.name if product.category else 'Uncategorized' }}</div>
+        <div class="product-name">{{ product.name }}</div>
+        <div class="product-desc">{{ product.description[:80] ~ '...' if product.description and product.description|length > 80 else product.description }}</div>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">₹{{ "%.2f"|format(product.price) }}</div>
+            <div class="product-stock {% if product.stock == 0 %}out{% elif product.stock <= 5 %}low{% endif %}">
+              {% if product.stock == 0 %}Out of Stock{% elif product.stock <= 5 %}Low Stock{% else %}In Stock{% endif %}
+            </div>
+          </div>
+          {% if user and product.stock > 0 %}
+            <form action="/cart/add/{{ product.id }}" method="post" style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap">
+              <input name="quantity" type="number" min="1" max="{{ product.stock }}" value="1" class="form-control" style="width:80px;" aria-label="Quantity">
+              <button class="btn btn-primary btn-sm" type="submit">🛒 Add</button>
+            </form>
+          {% elif not user %}
+            <a href="/login" class="btn btn-outline btn-sm">Login to Buy</a>
+          {% else %}
+            <span class="btn btn-sm" style="background:#eee;color:#999;cursor:not-allowed">Sold Out</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="emoji">🏪</div>
+    <h3>No products yet!</h3>
+    <p>Check back soon for amazing deals.</p>
+    {% if user and user.is_admin %}
+      <a href="/admin/products" class="btn btn-primary" style="margin-top:1rem">➕ Add Products</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

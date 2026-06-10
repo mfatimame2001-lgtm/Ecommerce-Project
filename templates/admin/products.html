@@ -1,0 +1,98 @@
+{% extends "admin_base.html" %}
+{% block title %}Products · Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>📦 Products</h1>
+  <button class="btn btn-primary" onclick="openModal('addProductModal')">➕ Add Product</button>
+</div>
+
+{% if not categories %}
+<div class="alert alert-info">⚠ Please <a href="/admin/categories">add a category</a> first before adding products.</div>
+{% endif %}
+
+<div class="table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th><th>Image</th><th>Name</th><th>Category</th>
+        <th>Price</th><th>Stock</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr>
+        <td>{{ product.id }}</td>
+        <td>
+          {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+          {% else %}
+            <div style="width:48px;height:48px;background:#f0f0f0;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.2rem">📦</div>
+          {% endif %}
+        </td>
+        <td><strong>{{ product.name }}</strong><br><small style="color:#888">{{ product.description[:50] ~ '...' if product.description and product.description|length > 50 else product.description or '' }}</small></td>
+        <td>{{ product.category.name if product.category else '—' }}</td>
+        <td>₹{{ "%.2f"|format(product.price) }}</td>
+        <td>
+          <span class="badge {% if product.stock == 0 %}badge-cancelled{% elif product.stock <= 5 %}badge-pending{% else %}badge-shipped{% endif %}">
+            {{ product.stock }}
+          </span>
+        </td>
+        <td style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+          <a href="/admin/products/edit/{{ product.id }}" class="btn btn-warning btn-sm">✏ Edit</a>
+          <form action="/admin/products/delete/{{ product.id }}" method="post" style="display:inline">
+            <button class="btn btn-danger btn-sm" data-confirm="Delete '{{ product.name }}'?">🗑</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" style="text-align:center;padding:2rem;color:#888">No products yet. Add your first product!</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Add Product Modal -->
+<div class="modal-overlay" id="addProductModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>➕ Add New Product</h3>
+      <button class="modal-close" onclick="closeModal('addProductModal')">✕</button>
+    </div>
+    <form action="/admin/products/add" method="post">
+      <div class="form-group">
+        <label>Product Name *</label>
+        <input name="name" type="text" class="form-control" placeholder="e.g. Wireless Earbuds" required>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea name="description" class="form-control" rows="2" placeholder="Short product description"></textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group">
+          <label>Price (₹) *</label>
+          <input name="price" type="number" step="0.01" min="0" class="form-control" placeholder="999.00" required>
+        </div>
+        <div class="form-group">
+          <label>Stock *</label>
+          <input name="stock" type="number" min="0" class="form-control" placeholder="50" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Image URL</label>
+        <input name="image_url" type="url" class="form-control" placeholder="https://example.com/image.jpg">
+      </div>
+      <div class="form-group">
+        <label>Category *</label>
+        <select name="category_id" class="form-control" required>
+          <option value="">— Select Category —</option>
+          {% for cat in categories %}
+            <option value="{{ cat.id }}">{{ cat.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Save Product</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

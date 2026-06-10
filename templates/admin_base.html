@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Admin · ShopEase{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙</text></svg>">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="/" class="brand">🛒 Shop<span>Ease</span> <small style="color:#666;font-size:.7rem;margin-left:.4rem">Admin</small></a>
+  <button class="hamburger" aria-label="Menu">☰</button>
+  <div class="nav-links">
+    <a href="/">🏠 Store</a>
+    <a href="/logout">👋 Logout ({{ user.name.split()[0] }})</a>
+  </div>
+</nav>
+
+<div class="admin-layout">
+  <aside class="sidebar">
+    <div class="menu-label">Dashboard</div>
+    <a href="/admin/dashboard" class="{% if request.url.path == '/admin/dashboard' %}active{% endif %}">
+      <span class="icon">📊</span> Dashboard
+    </a>
+    <div class="menu-label">Manage</div>
+    <a href="/admin/products" class="{% if '/admin/products' in request.url.path %}active{% endif %}">
+      <span class="icon">📦</span> Products
+    </a>
+    <a href="/admin/categories" class="{% if '/admin/categories' in request.url.path %}active{% endif %}">
+      <span class="icon">🗂</span> Categories
+    </a>
+    <a href="/admin/orders" class="{% if '/admin/orders' in request.url.path %}active{% endif %}">
+      <span class="icon">🧾</span> Orders
+    </a>
+    <a href="/admin/users" class="{% if '/admin/users' in request.url.path %}active{% endif %}">
+      <span class="icon">👥</span> Users
+    </a>
+  </aside>
+  <main class="admin-content">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+<script src="/static/js/app.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

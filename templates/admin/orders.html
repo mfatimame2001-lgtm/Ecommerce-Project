@@ -1,0 +1,51 @@
+{% extends "admin_base.html" %}
+{% block title %}Orders · Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>🧾 All Orders</h1>
+  <span style="color:#888">{{ orders|length }} total orders</span>
+</div>
+
+{% if orders %}
+<div class="table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr><th>#</th><th>Customer</th><th>Items</th><th>Total</th><th>Date</th><th>Status</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td><strong>#{{ order.id }}</strong></td>
+        <td>
+          {{ order.user.name if order.user else 'N/A' }}<br>
+          <small style="color:#888">{{ order.user.email if order.user else '' }}</small>
+        </td>
+        <td>{{ order.items|length }} item(s)</td>
+        <td><strong>₹{{ "%.2f"|format(order.total_amount) }}</strong></td>
+        <td>{{ order.created_at.strftime('%d %b %Y') }}</td>
+        <td><span class="badge badge-{{ order.status }}">{{ order.status }}</span></td>
+        <td>
+          <form action="/admin/orders/status/{{ order.id }}" method="post" style="display:flex;gap:.3rem;align-items:center">
+            <select name="status" class="form-control" style="padding:.3rem .6rem;font-size:.82rem;min-width:110px">
+              {% for s in ['pending','processing','shipped','delivered','cancelled'] %}
+                <option value="{{ s }}" {% if order.status == s %}selected{% endif %}>{{ s }}</option>
+              {% endfor %}
+            </select>
+            <button class="btn btn-success btn-sm" type="submit">✓</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% else %}
+<div class="empty-state">
+  <div class="emoji">🧾</div>
+  <h3>No orders yet</h3>
+  <p>Orders placed by customers will appear here.</p>
+</div>
+{% endif %}
+{% endblock %}
