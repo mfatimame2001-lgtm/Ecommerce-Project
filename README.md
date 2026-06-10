@@ -74,6 +74,8 @@ This project can be deployed on any Python-ready hosting service. Two easy optio
    - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
 4. Railway will provide a live URL after deployment.
 
+> Note: This project is deployed on Railway at `https://ecommerce-project-production-f4b5.up.railway.app`.
+> 
 > Note: Because this app uses SQLite, deployment will work best for demos and small assignments. A production-ready app should use a managed database like PostgreSQL.
 
 ---
@@ -165,4 +167,4 @@ git push -u origin main
 ```
 
 3. Share the GitHub repository link for submission.
-4. If you want live deployment, use a service like Render, Fly.io, or Railway and point it at this repo.
+4. Live deployment is available on Railway at `https://ecommerce-project-production-f4b5.up.railway.app`.
