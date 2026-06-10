@@ -50,7 +50,33 @@ Open → **http://127.0.0.1:8000**
 
 ---
 
-## 🔑 Default Credentials
+## � Deployment
+
+This project can be deployed on any Python-ready hosting service. Two easy options are Render and Railway.
+
+### Deploy on Render
+1. Create a Render account and connect your GitHub repository.
+2. Create a new Web Service.
+3. Set the repository root to `.`
+4. Render can auto-detect this project using `render.yaml`.
+5. If needed, use these commands:
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+6. Deploy and open the generated URL.
+
+### Deploy on Railway
+1. Create a Railway account and connect GitHub.
+2. Choose the project repo and deploy.
+3. Use:
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+4. Railway will provide a live URL after deployment.
+
+> Note: Because this app uses SQLite, deployment will work best for demos and small assignments. A production-ready app should use a managed database like PostgreSQL.
+
+---
+
+## �🔑 Default Credentials
 
 | Role | Email | Password |
 |---|---|---|
