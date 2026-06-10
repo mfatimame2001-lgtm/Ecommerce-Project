@@ -50,7 +50,7 @@ Open → **http://127.0.0.1:8000**
 
 ---
 
-## � Deployment
+## 🚀 Deployment
 
 This project can be deployed on any Python-ready hosting service. Two easy options are Render and Railway.
 
@@ -78,7 +78,7 @@ This project can be deployed on any Python-ready hosting service. Two easy optio
 
 ---
 
-## �🔑 Default Credentials
+## 🔑 Default Credentials
 
 | Role | Email | Password |
 |---|---|---|
